@@ -2,15 +2,29 @@ import { Request } from "express";
 import { v4 } from "uuid";
 import { typeorm } from "../database";
 import { Log } from "./log.model";
-export const create_log = async (req: Request): Promise<Log> => {
+import { ParsedQs } from "qs";
+import moment from "moment";
+export const create_log = async (
+  req: Request,
+  query: ParsedQs
+): Promise<Log> => {
   try {
-    const uuid = v4();
-    const created_log = await typeorm.manager.save(Log, {
-      ip: req.ips[0] || req.ip,
-      uuid,
+    const existing_log = await typeorm.manager.findOne(Log, {
+      where: { uuid: query.referenceId as string },
     });
-
-    return created_log;
+    if (
+      existing_log &&
+      Math.abs(moment().diff(existing_log.createdAt, "hour")) <= 1
+    ) {
+      return existing_log;
+    } else {
+      const uuid = v4();
+      const created_log = await typeorm.manager.save(Log, {
+        ip: req.ips[0] || req.ip,
+        uuid,
+      });
+      return created_log;
+    }
   } catch (error) {
     throw error;
   }

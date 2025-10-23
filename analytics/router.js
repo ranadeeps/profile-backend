@@ -18,7 +18,7 @@ const module_1 = require("./module");
 const router = express_1.default.Router();
 router.get("/create-log", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.status(http_status_codes_1.default.CREATED).send(yield (0, module_1.create_log)(req));
+        res.status(http_status_codes_1.default.CREATED).send(yield (0, module_1.create_log)(req, req.query));
     }
     catch (error) {
         next(error);
