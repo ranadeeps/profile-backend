@@ -14,7 +14,7 @@ export const create_log = async (
     });
     if (
       existing_log &&
-      Math.abs(moment().diff(existing_log.createdAt, "hour")) <= 1
+      Math.abs(moment(new Date()).diff(existing_log.createdAt, "hour")) <= 1
     ) {
       return existing_log;
     } else {

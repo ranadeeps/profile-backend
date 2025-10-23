@@ -23,7 +23,7 @@ const create_log = (req, query) => __awaiter(void 0, void 0, void 0, function* (
             where: { uuid: query.referenceId },
         });
         if (existing_log &&
-            Math.abs((0, moment_1.default)().diff(existing_log.createdAt, "hour")) <= 1) {
+            Math.abs((0, moment_1.default)(new Date()).diff(existing_log.createdAt, "hour")) <= 1) {
             return existing_log;
         }
         else {
