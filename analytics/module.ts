@@ -29,3 +29,18 @@ export const create_log = async (
     throw error;
   }
 };
+
+export const get_log_details = async () => {
+  const count = await typeorm.manager.count(Log);
+  const lastFiveLogs = await typeorm.manager.find(Log, {
+    order: { createdAt: "DESC" },
+    take: 5,
+  });
+  let res_html = `<p>Total count: ${count}</p><br/>`;
+  for (let i = 0; i < lastFiveLogs.length; i++) {
+    res_html += `${lastFiveLogs[i].ip} - ${
+      lastFiveLogs[i].uuid
+    } - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN")} <br/>`;
+  }
+  return res_html;
+};

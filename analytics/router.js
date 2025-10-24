@@ -24,5 +24,13 @@ router.get("/create-log", (req, res, next) => __awaiter(void 0, void 0, void 0, 
         next(error);
     }
 }));
+router.get("/get-log-details", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(http_status_codes_1.default.ACCEPTED).send(yield (0, module_1.get_log_details)());
+    }
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=router.js.map

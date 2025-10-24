@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.create_log = void 0;
+exports.get_log_details = exports.create_log = void 0;
 const uuid_1 = require("uuid");
 const database_1 = require("../database");
 const log_model_1 = require("./log.model");
@@ -40,4 +40,17 @@ const create_log = (req, query) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.create_log = create_log;
+const get_log_details = () => __awaiter(void 0, void 0, void 0, function* () {
+    const count = yield database_1.typeorm.manager.count(log_model_1.Log);
+    const lastFiveLogs = yield database_1.typeorm.manager.find(log_model_1.Log, {
+        order: { createdAt: "DESC" },
+        take: 5,
+    });
+    let res_html = `<p>Total count: ${count}</p><br/>`;
+    for (let i = 0; i < lastFiveLogs.length; i++) {
+        res_html += `${lastFiveLogs[i].ip} - ${lastFiveLogs[i].uuid} - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN")} <br/>`;
+    }
+    return res_html;
+});
+exports.get_log_details = get_log_details;
 //# sourceMappingURL=module.js.map
