@@ -40,7 +40,9 @@ export const get_log_details = async () => {
   for (let i = 0; i < lastFiveLogs.length; i++) {
     res_html += `${lastFiveLogs[i].ip} - ${
       lastFiveLogs[i].uuid
-    } - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN")} <br/>`;
+    } - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    })} <br/>`;
   }
   return res_html;
 };

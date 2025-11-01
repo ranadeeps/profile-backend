@@ -12,6 +12,7 @@ const app = (0, express_1.default)();
 app.use((0, morgan_1.default)("combined", { stream: process.stdout }));
 app.get("/", (req, res, next) => res.status(http_status_codes_1.default.OK).send("thanks for visiting"));
 app.use(express_1.default.json());
+app.set("trust proxy", true);
 app.use("/analytics", router_1.default);
 app.use((error, req, res, next) => {
     if (error instanceof error_1.apiError) {

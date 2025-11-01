@@ -12,6 +12,8 @@ app.get("/", (req, res: Response, next) =>
 
 app.use(express.json());
 
+app.set("trust proxy", true);
+
 app.use("/analytics", analytics);
 
 app.use(

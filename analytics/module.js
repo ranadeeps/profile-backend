@@ -48,7 +48,9 @@ const get_log_details = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     let res_html = `<p>Total count: ${count}</p><br/>`;
     for (let i = 0; i < lastFiveLogs.length; i++) {
-        res_html += `${lastFiveLogs[i].ip} - ${lastFiveLogs[i].uuid} - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN")} <br/>`;
+        res_html += `${lastFiveLogs[i].ip} - ${lastFiveLogs[i].uuid} - ${lastFiveLogs[i].createdAt.toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+        })} <br/>`;
     }
     return res_html;
 });
