@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { Log } from "./analytics/log.model";
+import { Message } from "./profile/message.model";
 
 const db_username = process.env.db_username;
 const db_password = process.env.db_password;
@@ -15,7 +16,7 @@ export const typeorm = new DataSource({
   database: db_name,
   synchronize: true,
   logging: true,
-  entities: [Log],
+  entities: [Log, Message],
   subscribers: [],
   migrations: [],
   metadataTableName: "metadata",

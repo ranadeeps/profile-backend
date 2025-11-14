@@ -3,6 +3,7 @@ import morgan from "morgan";
 import { apiError, authenticationError } from "./utils/error";
 import httpcodes from "http-status-codes";
 import analytics from "./analytics/router";
+import profile from "./profile/router";
 const app = express();
 app.use(morgan("combined", { stream: process.stdout }));
 
@@ -15,6 +16,8 @@ app.use(express.json());
 app.set("trust proxy", true);
 
 app.use("/analytics", analytics);
+
+app.use("/profile", profile);
 
 app.use(
   (

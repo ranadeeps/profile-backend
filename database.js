@@ -13,6 +13,7 @@ exports.typeorm = void 0;
 exports.connect_database = connect_database;
 const typeorm_1 = require("typeorm");
 const log_model_1 = require("./analytics/log.model");
+const message_model_1 = require("./profile/message.model");
 const db_username = process.env.db_username;
 const db_password = process.env.db_password;
 const db_name = process.env.db_name;
@@ -27,7 +28,7 @@ exports.typeorm = new typeorm_1.DataSource({
     database: db_name,
     synchronize: true,
     logging: true,
-    entities: [log_model_1.Log],
+    entities: [log_model_1.Log, message_model_1.Message],
     subscribers: [],
     migrations: [],
     metadataTableName: "metadata",
