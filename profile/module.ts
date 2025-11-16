@@ -24,3 +24,20 @@ export async function save_message(req: Request) {
     throw error;
   }
 }
+
+export async function get_messages(req: Request) {
+  try {
+    const page: number = req.params.page ? Number(req.params.page) : 1;
+    const latest_messages = await typeorm.manager.find(Message, {
+      order: { createdAt: "DESC" },
+      skip: (page - 1) * 5,
+      take: 5,
+    });
+    return {
+      success: true,
+      latest_messages,
+    };
+  } catch (error) {
+    throw error;
+  }
+}
