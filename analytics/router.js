@@ -32,5 +32,13 @@ router.get("/get-log-details", (req, res, next) => __awaiter(void 0, void 0, voi
         next(error);
     }
 }));
+router.get("/get-visitor-count", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(http_status_codes_1.default.ACCEPTED).send(yield (0, module_1.get_visitor_count)());
+    }
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=router.js.map

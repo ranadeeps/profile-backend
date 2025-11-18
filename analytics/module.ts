@@ -57,3 +57,8 @@ export const get_log_details = async () => {
   }
   return res_html;
 };
+
+export const get_visitor_count = async () => {
+  const count = await typeorm.manager.count(Log);
+  return { count };
+};

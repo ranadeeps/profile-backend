@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import http_codes from "http-status-codes";
-import { create_log, get_log_details } from "./module";
+import { create_log, get_log_details, get_visitor_count } from "./module";
 const router = express.Router();
 
 router.get(
@@ -18,6 +18,17 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.status(http_codes.ACCEPTED).send(await get_log_details());
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/get-visitor-count",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.status(http_codes.ACCEPTED).send(await get_visitor_count());
     } catch (error) {
       next(error);
     }
