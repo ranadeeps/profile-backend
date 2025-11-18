@@ -27,6 +27,10 @@ __decorate([
     __metadata("design:type", String)
 ], Log.prototype, "uuid", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, default: "others" }),
+    __metadata("design:type", String)
+], Log.prototype, "from", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({
         type: "timestamp",
         default: () => "CURRENT_TIMESTAMP",

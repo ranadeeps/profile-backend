@@ -6,12 +6,14 @@ import { ParsedQs } from "qs";
 import moment from "moment";
 export const create_log = async (
   req: Request,
-  query: ParsedQs
+  query: ParsedQs,
+  from: string = "others"
 ): Promise<Log | null> => {
   try {
     const existing_log = await typeorm.manager.findOne(Log, {
       where: { uuid: query.referenceId as string },
     });
+
     if (
       existing_log &&
       Math.abs(moment(new Date()).diff(existing_log.updatedAt, "hour")) <= 1
@@ -25,16 +27,31 @@ export const create_log = async (
         where: { uuid: query.referenceId as string },
       });
     } else {
-      const splitted_ip = req.ips[0].split(".");
-      if (splitted_ip[0] == "122" && splitted_ip[1] == "177") {
+      console.log(req.ips);
+      const splitted_ip = req.ips.length > 0 ? req.ips[0].split(".") : null;
+      if (splitted_ip && splitted_ip[0] == "122" && splitted_ip[1] == "177") {
         return null;
       }
-      const uuid = v4();
-      const created_log = await typeorm.manager.save(Log, {
-        ip: req.ips[0] || req.ip,
-        uuid,
+      const existing_log_with_ip = await typeorm.manager.findOne(Log, {
+        where: { ip: req.ips[0] as string },
+        order: { updatedAt: "DESC" },
       });
-      return created_log;
+      if (
+        existing_log_with_ip &&
+        Math.abs(
+          moment(new Date()).diff(existing_log_with_ip.updatedAt, "hour")
+        ) <= 1
+      ) {
+        return existing_log_with_ip;
+      } else {
+        const uuid = v4();
+        const created_log = await typeorm.manager.save(Log, {
+          ip: req.ips[0] || req.ip,
+          uuid,
+          from,
+        });
+        return created_log;
+      }
     }
   } catch (error) {
     throw error;

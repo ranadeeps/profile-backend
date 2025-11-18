@@ -40,5 +40,14 @@ router.get("/get-visitor-count", (req, res, next) => __awaiter(void 0, void 0, v
         next(error);
     }
 }));
+router.get("/leetcode", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, module_1.create_log)(req, req.query, "leetcode");
+        res.redirect("https://ranadeepreddyshyamakura.info/");
+    }
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=router.js.map

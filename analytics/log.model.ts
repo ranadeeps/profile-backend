@@ -17,6 +17,9 @@ export class Log {
   @Column({ type: "varchar", length: 255, nullable: true })
   uuid: string;
 
+  @Column({ type: "varchar", length: 255, nullable: true, default: "others" })
+  from: string;
+
   @CreateDateColumn({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP",

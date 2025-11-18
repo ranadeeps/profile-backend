@@ -17,7 +17,7 @@ const uuid_1 = require("uuid");
 const database_1 = require("../database");
 const log_model_1 = require("./log.model");
 const moment_1 = __importDefault(require("moment"));
-const create_log = (req, query) => __awaiter(void 0, void 0, void 0, function* () {
+const create_log = (req_1, query_1, ...args_1) => __awaiter(void 0, [req_1, query_1, ...args_1], void 0, function* (req, query, from = "others") {
     try {
         const existing_log = yield database_1.typeorm.manager.findOne(log_model_1.Log, {
             where: { uuid: query.referenceId },
@@ -30,16 +30,28 @@ const create_log = (req, query) => __awaiter(void 0, void 0, void 0, function* (
             });
         }
         else {
-            const splitted_ip = req.ips[0].split(".");
-            if (splitted_ip[0] == "122" && splitted_ip[1] == "177") {
+            console.log(req.ips);
+            const splitted_ip = req.ips.length > 0 ? req.ips[0].split(".") : null;
+            if (splitted_ip && splitted_ip[0] == "122" && splitted_ip[1] == "177") {
                 return null;
             }
-            const uuid = (0, uuid_1.v4)();
-            const created_log = yield database_1.typeorm.manager.save(log_model_1.Log, {
-                ip: req.ips[0] || req.ip,
-                uuid,
+            const existing_log_with_ip = yield database_1.typeorm.manager.findOne(log_model_1.Log, {
+                where: { ip: req.ips[0] },
+                order: { updatedAt: "DESC" },
             });
-            return created_log;
+            if (existing_log_with_ip &&
+                Math.abs((0, moment_1.default)(new Date()).diff(existing_log_with_ip.updatedAt, "hour")) <= 1) {
+                return existing_log_with_ip;
+            }
+            else {
+                const uuid = (0, uuid_1.v4)();
+                const created_log = yield database_1.typeorm.manager.save(log_model_1.Log, {
+                    ip: req.ips[0] || req.ip,
+                    uuid,
+                    from,
+                });
+                return created_log;
+            }
         }
     }
     catch (error) {
