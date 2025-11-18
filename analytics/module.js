@@ -23,10 +23,17 @@ const create_log = (req, query) => __awaiter(void 0, void 0, void 0, function* (
             where: { uuid: query.referenceId },
         });
         if (existing_log &&
-            Math.abs((0, moment_1.default)(new Date()).diff(existing_log.createdAt, "hour")) <= 1) {
-            return existing_log;
+            Math.abs((0, moment_1.default)(new Date()).diff(existing_log.updatedAt, "hour")) <= 1) {
+            const updated_log = yield database_1.typeorm.manager.update(log_model_1.Log, { id: existing_log.id }, { updatedAt: new Date() });
+            return yield database_1.typeorm.manager.findOne(log_model_1.Log, {
+                where: { uuid: query.referenceId },
+            });
         }
         else {
+            const splitted_ip = req.ips[0].split(".");
+            if (splitted_ip[0] == "122" && splitted_ip[1] == "177") {
+                return null;
+            }
             const uuid = (0, uuid_1.v4)();
             const created_log = yield database_1.typeorm.manager.save(log_model_1.Log, {
                 ip: req.ips[0] || req.ip,
