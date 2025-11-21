@@ -49,5 +49,23 @@ router.get("/leetcode", (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 }));
+router.get("/linkedin", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, module_1.create_log)(req, req.query, "linkedin");
+        res.redirect("https://ranadeepreddyshyamakura.info/");
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+router.get("/instagram", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, module_1.create_log)(req, req.query, "instagram");
+        res.redirect("https://ranadeepreddyshyamakura.info/");
+    }
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=router.js.map

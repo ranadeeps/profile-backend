@@ -49,4 +49,28 @@ router.get(
   }
 );
 
+router.get(
+  "/linkedin",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await create_log(req, req.query, "linkedin");
+      res.redirect("https://ranadeepreddyshyamakura.info/");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/instagram",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await create_log(req, req.query, "instagram");
+      res.redirect("https://ranadeepreddyshyamakura.info/");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default router;
