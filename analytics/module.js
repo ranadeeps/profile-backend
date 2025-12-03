@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get_visitor_count = exports.get_log_details = exports.create_log = void 0;
+exports.get_monthly_data = exports.get_visitor_count = exports.get_log_details = exports.create_log = void 0;
 const uuid_1 = require("uuid");
 const database_1 = require("../database");
 const log_model_1 = require("./log.model");
@@ -79,4 +79,21 @@ const get_visitor_count = () => __awaiter(void 0, void 0, void 0, function* () {
     return { count };
 });
 exports.get_visitor_count = get_visitor_count;
+const get_monthly_data = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield database_1.typeorm
+            .getRepository(log_model_1.Log)
+            .createQueryBuilder("logs")
+            .select("TO_CHAR(logs.createdAt, 'YYYY-MM')", "year_month")
+            .addSelect("COUNT(logs.id)", "count")
+            .groupBy("year_month")
+            .orderBy("year_month", "ASC")
+            .getRawMany();
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.get_monthly_data = get_monthly_data;
 //# sourceMappingURL=module.js.map

@@ -67,5 +67,13 @@ router.get("/instagram", (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 }));
+router.get("/monthly-data", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.status(http_status_codes_1.default.ACCEPTED).send(yield (0, module_1.get_monthly_data)());
+    }
+    catch (error) {
+        next(error);
+    }
+}));
 exports.default = router;
 //# sourceMappingURL=router.js.map

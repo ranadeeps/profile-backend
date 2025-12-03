@@ -79,3 +79,19 @@ export const get_visitor_count = async () => {
   const count = await typeorm.manager.count(Log);
   return { count };
 };
+
+export const get_monthly_data = async () => {
+  try {
+    const result = await typeorm
+      .getRepository(Log)
+      .createQueryBuilder("logs")
+      .select("TO_CHAR(logs.createdAt, 'YYYY-MM')", "year_month")
+      .addSelect("COUNT(logs.id)", "count")
+      .groupBy("year_month")
+      .orderBy("year_month", "ASC")
+      .getRawMany();
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};

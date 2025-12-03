@@ -1,6 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 import http_codes from "http-status-codes";
-import { create_log, get_log_details, get_visitor_count } from "./module";
+import {
+  create_log,
+  get_log_details,
+  get_monthly_data,
+  get_visitor_count,
+} from "./module";
 import { typeorm } from "../database";
 import { Log } from "./log.model";
 const router = express.Router();
@@ -67,6 +72,17 @@ router.get(
     try {
       await create_log(req, req.query, "instagram");
       res.redirect("https://ranadeepreddyshyamakura.info/");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/monthly-data",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.status(http_codes.ACCEPTED).send(await get_monthly_data());
     } catch (error) {
       next(error);
     }
