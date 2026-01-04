@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response, Router } from "express";
 import http_codes from "http-status-codes";
 import {
   create_log,
@@ -6,9 +6,9 @@ import {
   get_monthly_data,
   get_visitor_count,
 } from "./module";
-import { typeorm } from "../database";
-import { Log } from "./log.model";
-const router = express.Router();
+import { Channel, createChannel, createSession } from "better-sse";
+const router: Router = express.Router();
+export const channel: Channel = createChannel();
 
 router.get(
   "/create-log",
@@ -83,6 +83,18 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.status(http_codes.ACCEPTED).send(await get_monthly_data());
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/get-log-notifications",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const session = await createSession(req, res);
+      channel.register(session);
     } catch (error) {
       next(error);
     }

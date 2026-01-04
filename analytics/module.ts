@@ -4,6 +4,7 @@ import { typeorm } from "../database";
 import { Log } from "./log.model";
 import { ParsedQs } from "qs";
 import moment from "moment";
+import { channel } from "./router";
 export const create_log = async (
   req: Request,
   query: ParsedQs,
@@ -45,6 +46,7 @@ export const create_log = async (
         return existing_log_with_ip;
       } else {
         const uuid = v4();
+        channel.broadcast({ ip: req.ips[0] || req.ip, uuid, from }, "log");
         const created_log = await typeorm.manager.save(Log, {
           ip: req.ips[0] || req.ip,
           uuid,

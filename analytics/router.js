@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.channel = void 0;
 const express_1 = __importDefault(require("express"));
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const module_1 = require("./module");
+const better_sse_1 = require("better-sse");
 const router = express_1.default.Router();
+exports.channel = (0, better_sse_1.createChannel)();
 router.get("/create-log", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         res.status(http_status_codes_1.default.CREATED).send(yield (0, module_1.create_log)(req, req.query));
@@ -70,6 +73,15 @@ router.get("/instagram", (req, res, next) => __awaiter(void 0, void 0, void 0, f
 router.get("/monthly-data", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         res.status(http_status_codes_1.default.ACCEPTED).send(yield (0, module_1.get_monthly_data)());
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+router.get("/get-log-notifications", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const session = yield (0, better_sse_1.createSession)(req, res);
+        exports.channel.register(session);
     }
     catch (error) {
         next(error);
