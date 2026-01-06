@@ -11,6 +11,8 @@ export const create_log = async (
   from: string = "others"
 ): Promise<Log | null> => {
   try {
+    channel.broadcast({ ip: req.ips[0] || req.ip, from }, "log");
+
     const existing_log = await typeorm.manager.findOne(Log, {
       where: { uuid: query.referenceId as string },
     });
@@ -46,7 +48,6 @@ export const create_log = async (
         return existing_log_with_ip;
       } else {
         const uuid = v4();
-        channel.broadcast({ ip: req.ips[0] || req.ip, uuid, from }, "log");
         const created_log = await typeorm.manager.save(Log, {
           ip: req.ips[0] || req.ip,
           uuid,
