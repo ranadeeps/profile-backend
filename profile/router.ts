@@ -26,4 +26,15 @@ router.get(
   }
 );
 
+router.get(
+  "/download-resume",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.download("/var/thetruetouch/mdms/ranadeep_cv.pdf", "ranadeep_cv.pdf");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default router;

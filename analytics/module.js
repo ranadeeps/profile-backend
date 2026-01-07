@@ -20,6 +20,7 @@ const moment_1 = __importDefault(require("moment"));
 const router_1 = require("./router");
 const create_log = (req_1, query_1, ...args_1) => __awaiter(void 0, [req_1, query_1, ...args_1], void 0, function* (req, query, from = "others") {
     try {
+        router_1.channel.broadcast({ ip: req.ips[0] || req.ip, from }, "log");
         const existing_log = yield database_1.typeorm.manager.findOne(log_model_1.Log, {
             where: { uuid: query.referenceId },
         });
@@ -46,7 +47,6 @@ const create_log = (req_1, query_1, ...args_1) => __awaiter(void 0, [req_1, quer
             }
             else {
                 const uuid = (0, uuid_1.v4)();
-                router_1.channel.broadcast({ ip: req.ips[0] || req.ip, uuid, from }, "log");
                 const created_log = yield database_1.typeorm.manager.save(log_model_1.Log, {
                     ip: req.ips[0] || req.ip,
                     uuid,
