@@ -2,6 +2,7 @@ import { Request } from "express";
 import { apiError } from "../utils/error";
 import { typeorm } from "../database";
 import { Message } from "./message.model";
+import { File } from "./file.model";
 
 export async function save_message(req: Request) {
   try {
@@ -37,6 +38,24 @@ export async function get_messages(req: Request) {
       success: true,
       latest_messages,
     };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function save_file(
+  file: Express.Multer.File,
+  { fileType }: { fileType: string },
+) {
+  try {
+    await typeorm.manager.save(File, {
+      originalFileName: file.originalname,
+      fileName: file.filename,
+      mimeType: file.mimetype,
+      fileSizeInBytes: file.size,
+      destination: file.destination,
+      fileType,
+    });
   } catch (error) {
     throw error;
   }

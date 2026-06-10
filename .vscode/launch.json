@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "runtimeExecutable": "C:/nvm4w/nodejs/node",
+      // "runtimeExecutable": "C:/nvm4w/nodejs/node",
       "program": "${workspaceFolder}/main.ts",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "envFile": "${workspaceFolder}/.vscode/.env"
