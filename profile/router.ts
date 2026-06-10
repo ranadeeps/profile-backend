@@ -6,7 +6,7 @@ import path from "path";
 import { apiError } from "../utils/error";
 import { typeorm } from "../database";
 import { File } from "./file.model";
-
+const password = process.env.password as string;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../../uploads"));
@@ -47,10 +47,17 @@ router.post(
   upload.single("file"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("uploaded file: ", JSON.stringify(req.file));
-      if (!req.file) throw new apiError(400, "Please upload file");
+      const {
+        password: req_password,
+        fileType,
+      }: { password: string; fileType: string } = req.body;
+      if (!req.file || !req_password || !fileType)
+        throw new apiError(400, "Please enter all details");
+      if (req_password != password) {
+        throw new apiError(400, "Invalid password");
+      }
       await save_file(req.file, req.body);
-      res.sendStatus(http_codes.ACCEPTED);
+      res.status(http_codes.ACCEPTED).send({ message: "file uploaded" });
     } catch (error) {
       next(error);
     }
@@ -69,7 +76,7 @@ router.get(
         res.sendFile(
           path.join(latest_resume.destination, latest_resume.fileName),
         );
-      else res.sendStatus(http_codes.NOT_FOUND);
+      else res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
     } catch (error) {
       next(error);
     }
@@ -89,7 +96,7 @@ router.get(
           path.join(latest_resume.destination, latest_resume.fileName),
           "ranadeep_resume.pdf",
         );
-      else res.sendStatus(http_codes.NOT_FOUND);
+      else res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
     } catch (error) {
       next(error);
     }
