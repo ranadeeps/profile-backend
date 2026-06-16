@@ -9,6 +9,7 @@ const error_1 = require("./utils/error");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const router_1 = __importDefault(require("./analytics/router"));
 const router_2 = __importDefault(require("./profile/router"));
+const router_3 = __importDefault(require("./files/router"));
 const app = (0, express_1.default)();
 app.use((0, morgan_1.default)("combined", { stream: process.stdout }));
 app.get("/", (req, res, next) => res.status(http_status_codes_1.default.OK).send("thanks for visiting"));
@@ -16,6 +17,7 @@ app.use(express_1.default.json());
 app.set("trust proxy", true);
 app.use("/analytics", router_1.default);
 app.use("/profile", router_2.default);
+app.use("/files", router_3.default);
 app.use((error, req, res, next) => {
     if (error instanceof error_1.apiError) {
         res

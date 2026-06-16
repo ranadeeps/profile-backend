@@ -4,11 +4,12 @@ import { apiError, authenticationError } from "./utils/error";
 import httpcodes from "http-status-codes";
 import analytics from "./analytics/router";
 import profile from "./profile/router";
+import files from "./files/router";
 const app = express();
 app.use(morgan("combined", { stream: process.stdout }));
 
 app.get("/", (req, res: Response, next) =>
-  res.status(httpcodes.OK).send("thanks for visiting")
+  res.status(httpcodes.OK).send("thanks for visiting"),
 );
 
 app.use(express.json());
@@ -19,17 +20,19 @@ app.use("/analytics", analytics);
 
 app.use("/profile", profile);
 
+app.use("/files", files);
+
 app.use(
   (
     error: Error | apiError | authenticationError,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     if (error instanceof apiError) {
       res
         .status(
-          typeof error.code == "number" ? error.code : httpcodes.BAD_REQUEST
+          typeof error.code == "number" ? error.code : httpcodes.BAD_REQUEST,
         )
         .send({ code: error.code, message: error.message });
     } else if (error instanceof authenticationError) {
@@ -42,7 +45,7 @@ app.use(
         message: error.message,
       });
     }
-  }
+  },
 );
 
 export default app;

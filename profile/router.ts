@@ -6,7 +6,7 @@ import path from "path";
 import { apiError } from "../utils/error";
 import { typeorm } from "../database";
 import { File } from "./file.model";
-const password = process.env.password as string;
+import { password } from "../utils/config";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../../uploads"));

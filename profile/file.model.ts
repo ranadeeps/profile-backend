@@ -29,6 +29,9 @@ export class File {
   @Column({ type: "varchar", length: 255, nullable: false, default: "others" })
   fileType: string;
 
+  @Column({ type: "varchar", length: 1, default: "N" })
+  isDeleted: string;
+
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
