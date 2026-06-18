@@ -13,7 +13,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const query = req.query;
     const { page = 1, limit = 5 } = query;
-    const files = await typeorm.manager.find(File, {
+    const [files, totalCount] = await typeorm.manager.findAndCount(File, {
       where: { isDeleted: "N" },
       select: {
         id: true,
@@ -27,9 +27,13 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       order: { createdAt: "DESC" },
       take: Number(limit),
     });
-    res
-      .status(http_codes.ACCEPTED)
-      .send({ files, total: files.length, page, limit });
+    res.status(http_codes.ACCEPTED).send({
+      files,
+      total: totalCount,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(totalCount / Number(limit)),
+    });
   } catch (error) {
     next(error);
   }
