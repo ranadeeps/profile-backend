@@ -72,11 +72,18 @@ router.get(
         where: { fileType: "resume" },
         order: { createdAt: "DESC" },
       });
-      if (latest_resume)
+      if (latest_resume) {
+        await typeorm.manager.increment(
+          File,
+          { id: latest_resume.id },
+          "totalViews",
+          1,
+        );
         res.sendFile(
           path.join(latest_resume.destination, latest_resume.fileName),
         );
-      else res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
+      } else
+        res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
     } catch (error) {
       next(error);
     }
@@ -91,12 +98,19 @@ router.get(
         where: { fileType: "resume" },
         order: { createdAt: "DESC" },
       });
-      if (latest_resume)
+      if (latest_resume) {
+        await typeorm.manager.increment(
+          File,
+          { id: latest_resume.id },
+          "totalDownloads",
+          1,
+        );
         res.download(
           path.join(latest_resume.destination, latest_resume.fileName),
           "ranadeep_resume.pdf",
         );
-      else res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
+      } else
+        res.status(http_codes.NOT_FOUND).send({ message: "file not found" });
     } catch (error) {
       next(error);
     }

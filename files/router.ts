@@ -17,11 +17,11 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
       where: { isDeleted: "N" },
       select: {
         id: true,
-        fileName: true,
         fileSizeInBytes: true,
         mimeType: true,
         createdAt: true,
         fileType: true,
+        originalFileName: true,
       },
       skip: (Number(page) - 1) * Number(limit),
       order: { createdAt: "DESC" },
@@ -50,6 +50,7 @@ router.get(
       if (!file) {
         throw new apiError(400, "File not found");
       }
+      await typeorm.manager.increment(File, { id: file.id }, "totalViews", 1);
       res.sendFile(path.join(file.destination, file.fileName));
     } catch (error) {
       next(error);
@@ -68,6 +69,12 @@ router.get(
       if (!file) {
         throw new apiError(400, "File not found");
       }
+      await typeorm.manager.increment(
+        File,
+        { id: file.id },
+        "totalDownloads",
+        1,
+      );
       res.download(path.join(file.destination, file.fileName), file.fileName);
     } catch (error) {
       next(error);

@@ -29,6 +29,12 @@ export class File {
   @Column({ type: "varchar", length: 255, nullable: false, default: "others" })
   fileType: string;
 
+  @Column({ type: "int", default: 0 })
+  totalViews: number;
+
+  @Column({ type: "int", default: 0 })
+  totalDownloads: number;
+
   @Column({ type: "varchar", length: 1, default: "N" })
   isDeleted: string;
 
